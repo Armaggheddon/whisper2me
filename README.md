@@ -144,7 +144,8 @@ If using on Jetson platform, `docker` is already installed in Jetpack, use [NVID
     docker commit -p CONTAINER_ID whisper2me:latest
     ```
     The changes to the base image are stored in the new image that will be named `whisper2me:latest`
-    > `-p` option pauses the container while the commit is being executed. 
+    > `-p` option pauses the container while the commit is being executed. \
+    > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/)
 
 8. Check the new image with:
     ```bash
@@ -169,8 +170,6 @@ If using on Jetson platform, `docker` is already installed in Jetpack, use [NVID
     docker run -it --rm --runtime nvidia --gpus all --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_USER_ID -v "$(pwd)":/whisper2me -d whisper2me:latest bash -c "cd /whisper2me && python3 src/main.py"
     ```
     replacing `YOUR_BOT_TOKEN` and `YOUR_USER_ID` with the appropriate values. 
-    
-    > The option `-d` runs the container in detached mode.
 
 12. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The startup time, compared to CPU is significantly longer, on my tests the bot can take up to 1 minute before being ready.
 
