@@ -76,7 +76,7 @@ Setup
 
 5. Build the docker image with:
     ```bash
-    docker build whisper2me .
+    docker build -t whisper2me .
     ```
 
 6. After the image has been built you can see it with:
