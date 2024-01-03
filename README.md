@@ -186,6 +186,10 @@ To use the bot simply forward or send an audio message. You will receive a messa
 
 ![](/doc/images/test_message.png)
 
+Additionally, when a NON-ADMIN user tries a command reserved to the ADMIN, the ADMIN is notified with a message containing the `user_id` and the `command` that the user sent.
+
+![](/doc/images/admin_warning.png)
+
 Available commands
 ==================
 
