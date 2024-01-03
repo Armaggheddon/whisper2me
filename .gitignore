@@ -1,4 +1,5 @@
-my_credentials.txt
+PRIVATE.txt
+PRIVATE.Dockerfile
 src/bot/__pycache__/
 src/filters/__pycache__/
 src/handlers/__pycache__/
