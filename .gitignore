@@ -1,5 +1,6 @@
 PRIVATE.txt
 PRIVATE.Dockerfile
+doc/images/*_original.png
 src/bot/__pycache__/
 src/filters/__pycache__/
 src/handlers/__pycache__/
