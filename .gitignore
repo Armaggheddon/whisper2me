@@ -1,0 +1,7 @@
+my_credentials.txt
+src/bot/__pycache__/
+src/filters/__pycache__/
+src/handlers/__pycache__/
+src/storage/__pycache__/
+src/utils/__pycache__/
+src/whisper_helper/__pycache__/
