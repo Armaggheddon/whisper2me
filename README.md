@@ -230,6 +230,10 @@ How it works
 > [!NOTE]
 > Translation is only available when a using a model that does not end with `_EN`
 
+The code can run on both ARM-64 and X86 architectures. It has been tested on:
+- Raspberry Pi 3B with 1GB of RAM (using [Raspberry Pi OS(64-bit) Lite](https://www.raspberrypi.com/software/operating-systems/)), the only runnable model is the `TINY` one. Almost all available Pi's resources are used and runs approximately 6x slower than real-time.
+- Nvidia Orin AGX with 64GB of RAM (using [Jetpack 5.1.2](https://developer.nvidia.com/embedded/jetpack-sdk-512)), all models run without any issue. Using the `LARGE_V3` model requires around 25-30 GB of combined RAM (both CPU and GPU). Execution time is faster than real-time.
+
 
 Task list
 =========
