@@ -91,7 +91,8 @@ Setup
     ```bash
     docker run -it --rm -v "$(pwd)"/allowed_users.txt:/whisper2me/allowed_users.txt -v "$(pwd)"/allowed_users.bak:/whisper2me/allowed_users.bak -d whisper2me:latest
     ```
-    > The option `-d` runs the container in detached mode.
+    > `-d` runs the container in detached mode. \
+    > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/)
 
 9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while.
 
@@ -144,8 +145,7 @@ If using on Jetson platform, `docker` is already installed in Jetpack, use [NVID
     docker commit -p CONTAINER_ID whisper2me:latest
     ```
     The changes to the base image are stored in the new image that will be named `whisper2me:latest`
-    > `-p` option pauses the container while the commit is being executed. \
-    > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/)
+    > `-p` option pauses the container while the commit is being executed.
 
 8. Check the new image with:
     ```bash
