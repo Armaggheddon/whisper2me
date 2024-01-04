@@ -1,5 +1,4 @@
 from enum import Enum
-
 from telebot import TeleBot
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -17,6 +16,11 @@ class Messages(Enum):
     ERROR =             "❌ User %(user_id)s is already allowed"
 
     def set_user(self, user_id):
+        '''Sets the user id in the message
+        
+        Args:
+        - user_id - the user id to set
+        '''
         return self.value % {"user_id" : str(user_id)}
 
 
@@ -33,7 +37,7 @@ def handle_user_id(message, bot):
     user_to_add = message.text
     
     # Support the scenario where the id is taken from a forwarded message
-    # to avoid "walkaround methods"
+    # to avoid "walkaround methods" to obtain the user_id
     if message.forward_from != None:
         user_to_add = message.forward_from.id
 

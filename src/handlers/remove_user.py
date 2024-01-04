@@ -8,6 +8,7 @@ from utils.user_formats import UserFormats
 
 CMD = "remove_user"
 
+# Callback data for user removal is "- <user_id>" where "-" if followed by a space
 REMOVE_USER_CB_CONDITION = "- "
 CB_LAMBDA = lambda call : call.data[:len(REMOVE_USER_CB_CONDITION)] == REMOVE_USER_CB_CONDITION
 DATA_FROM_CB = lambda call: call.data[len(REMOVE_USER_CB_CONDITION):] 

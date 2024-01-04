@@ -10,14 +10,21 @@ class EnvKeys(Enum):
 
 
 class _EnvVars():
-    
+    '''Helper class to retrieve environment variables
+    '''
+
+
     def __init__(
             self,
             bot_token_key : str = EnvKeys.BOT_TOKEN.value,
             admin_userid_key : str = EnvKeys.ADMIN_USER_ID.value,
             # model_name_key : str = EnvKeys.MODEL_NAME.value
     ):
-        
+        '''
+        Args:
+        - bot_token_key : str - the key of the bot token environment variable
+        - admin_userid_key : str - the key of the admin user id environment variable
+        '''
         self.bot_token = self.get_bot_token(bot_token_key)
         self.admin_id = self.get_admin_userid(admin_userid_key)
         # self.model_name = self.get_model_name(model_name_key)

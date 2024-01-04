@@ -7,6 +7,8 @@ from whisper_helper import whisper_helper
 
 CONTENT_TYPES = ["voice"]
 
+# Received audio is temprarily saved in this folder, and removed when
+# the transcription is done
 TMP_FOLDER_PATH = "src/tmp"
 FILE_NAME_TEMPLATE = "audio_%(message_id)s_%(message_date)s.ogg"
 
