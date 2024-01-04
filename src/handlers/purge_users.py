@@ -23,13 +23,19 @@ def handle_purge_continuation(message, bot):
     response = message.text
 
     if response == "YES":
-        for user in storage.allowed_users:
-            storage.remove_user(user)
         
-        bot.send_message(
-            message.chat.id,
-            Messages.YES.value
-        )
+        result = storage.purge_users()
+        
+        if result.is_success:
+            bot.send_message(
+                message.chat.id,
+                Messages.YES.value
+            )
+        else:
+            bot.send_message(
+                message.chat.id,
+                result.message
+            )
     else:
         bot.send_message(
             message.chat.id,

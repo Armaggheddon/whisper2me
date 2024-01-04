@@ -9,12 +9,20 @@ class StorageFileNames(Enum):
 class Messages(Enum):
     USER_ADD_ALREADY_IN =       "%(user_id)s is already allowed"
     USER_REMOVE_ALREADY_IN =    "%(user_id)s is already not allowed"
+    USER_PURGE_LIST_ALREADY_EMPY = "The list is already empty"
 
     def set_user(self, user_id):
+        '''Sets the user id in the message
+        
+        Args:
+        - user_id - the user id to set
+        '''
         return self.value % {"user_id" : str(user_id)}
     
 
 class _AllowedUsersFile():
+    '''Helper class to manage the allowed users file
+    '''
     
     def __init__(self):
         
@@ -34,10 +42,19 @@ class _AllowedUsersFile():
         return _tmp
 
 
-    def perform_with_update(self, func, user_id):
+    def perform_with_update(self, func, user_id = None):
+        '''Performs the given function and updates the file as long as the backup file
+        
+        Args:
+        - func - the function to perform
+        - user_id - the user id to pass to the function
+        '''
         self.update_file(StorageFileNames.BAK_FILE_NAME)
 
-        func(user_id)
+        if user_id != None:
+            func(user_id)
+        else:
+            func()
 
         self.update_file(StorageFileNames.FILE_NAME)
 
@@ -56,7 +73,14 @@ class _AllowedUsersFile():
 
 
     def add_user(self, user_id : int):
-        # TODO: caller must ensure user_id IS NOT ADMIN
+        '''Adds a user to the allowed users list
+
+        Args:
+        - user_id : int - the user id to add
+
+        Returns:
+        - Result - the result of the operation with a message only if it failed
+        '''
         result = Result(is_success = False)
 
         if user_id not in self.allowed_users:
@@ -65,9 +89,36 @@ class _AllowedUsersFile():
         else:
             result.message = Messages.USER_ADD_ALREADY_IN.set_user(user_id)
         return result
+    
+
+    def purge_users(self):
+        '''Purges all users from the allowed users list
+        
+        Returns:
+        - Result - the result of the operation, with a message only if it failed
+        '''
+        if len(self.allowed_users) == 0:
+            return Result(
+                is_success = False,
+                message = Messages.USER_PURGE_LIST_ALREADY_EMPY.value
+            )
+        
+        result = Result(is_success=False)
+
+        self.perform_with_update(self.allowed_users.clear)
+        result.is_success = True
+
+        return result
 
     def remove_user(self, user_id : int):
-        # TODO: caller must ensure user_id IS NOT ADMIN
+        '''Removes a user from the allowed users list
+        
+        Args:
+        - user_id : int - the user id to remove
+        
+        Returns:
+        - Result - the result of the operation, with a message only if it failed
+        '''
         result = Result(is_success=False)
 
         if user_id in self.allowed_users:
