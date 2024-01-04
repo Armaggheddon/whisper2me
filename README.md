@@ -32,7 +32,7 @@ Additionally you need the following:
 Setup
 =====
 
-1. Pull the repository on your machine with:
+1. Clone the repository on your machine with:
     ```bash
     git clone https://github.com/Armaggheddon/whisper2me.git
     ```
