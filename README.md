@@ -92,7 +92,7 @@ Setup
     docker run -it --rm -v "$(pwd)"/allowed_users.txt:/whisper2me/allowed_users.txt -v "$(pwd)"/allowed_users.bak:/whisper2me/allowed_users.bak -d whisper2me:latest
     ```
     > `-d` runs the container in detached mode. \
-    > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/)
+    > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/), replace `--rm` with `--restart <YOUR_POLICY>`, i.e. `--restart unless-stopped`
 
 9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while.
 
