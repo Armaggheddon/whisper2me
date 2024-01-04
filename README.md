@@ -237,5 +237,5 @@ The code can run on both ARM-64 and X64 architectures. It has been tested on:
 
 Task list
 =========
-- [ ] `/purge` command not removing all users
+- [x] `/purge` command not removing all users [Fixed 😁](https://github.com/Armaggheddon/whisper2me/commit/417a7942ef443fb804d8d13778d59616679cac2b)
 * [ ] Add model cache to avoid redownload of the model every time the container is ran.
