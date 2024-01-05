@@ -65,14 +65,18 @@ Setup
     - LARGE_V3
     - LARGE
     
-    To try different models, replace `TINY` with one of the above options in `src/whisper_helper/__init__.py`:
-    ```python
-    whisper_helper = _WhisperHelper(
-        model_name = ModelNames.TINY # for example ModelNames.MEDIUM
-        ...
-    )
+    To try different models, replace `TINY` with one of the above options in the Dockerfile:
+    ```Dockerfile
+    # Available values are, defaults to TINY if mispelled:
+    # >TINY             >TINY_EN
+    # >BASE             >BASE_EN
+    # >SMALL            >SMALL_EN
+    # >MEDIUM           >MEDIUM_EN
+    # >LARGE_V1         >LARGE_V2
+    # >LARGE_V3         >LARGE
+    ENV MODEL_NAME=TINY
     ```
-    >Refer to the OpenAI whisper's official paper for the performance evaluation between the different models, available [HERE](https://arxiv.org/abs/2212.04356)
+    >Refer to the OpenAI whisper's official paper for the performance evaluation between the different models, available [here](https://arxiv.org/abs/2212.04356)
 
 5. Build the docker image with:
     ```bash
@@ -89,12 +93,12 @@ Setup
 
 8. Run the container with:
     ```bash
-    docker run -it --rm -v "$(pwd)"/allowed_users.txt:/whisper2me/allowed_users.txt -v "$(pwd)"/allowed_users.bak:/whisper2me/allowed_users.bak -d whisper2me:latest
+    docker run -it --rm -v "$(pwd)"/persistent_data:/whisper2me/persistent_data -d whisper2me:latest
     ```
     > `-d` runs the container in detached mode. \
     > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/), replace `--rm` with `--restart <YOUR_POLICY>`, i.e. `--restart unless-stopped`
 
-9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while.
+9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The model's weights are stored in `persistent_data/model_cache`.
 
 
 CUDA Setup
@@ -151,25 +155,47 @@ If using on Jetson platform, `docker` is already installed in Jetpack, use [NVID
     ```bash
     docker image list
     ```
+9. Required arguments:
+    - Set the `BOT_TOKEN` and `ADMIN_USER_ID` with:
+        ```Dockerfile
+        --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_ADMIN_ID
+        ```
+        replacing `YOUR_BOT_TOKEN` and `YOUR_ADMIN_ID` with yours
 
-9. To change the default model used see step `4` in [Setup](#setup)
+    - To use CUDA use the following environment variable in the launch string:
+        ```Dockerfile
+        --env USE_CUDA=True
+        ```
+        if CUDA is not detected, it will fall back to use the CPU.
 
-10. Enable CUDA editing the following lines in `src/whisper_helper/__init__.py`:
-    ```python
-    whisper_helper = _WhisperHelper(
-        model_name = ModelNames.TINY, # or a different one like ModelNames.MEDIUM
-        device = Devices.CUDA,
-        use_fp16 = ModelDtypes.USE_FP32, # or ModelDtypes.USE_FP16 to use fp16
-        device_id = 0, # replace 0 with the GPU id you want to use
-    )
-    ```
-    Additionally using `ModelDtypes.USE_FP16`, when using `Devices.CUDA`, you can enable the use of 16-bit floating point weights instead of 32-bit to improve inference time while losing a bit of precision (bigger models are less influenced by this change). If you have more than one GPU and plan to run this code on a specific GPU use `device_id` to chose the GPU.
+10. Optional arguments:
+    - Use fp16 instead of fp32, will be used only if CUDA is True and is detected
+        ```Dockerfile
+        --env USE_FP16=True
+        ```
+    - Select the GPU that will be used for the model inference, defaults to 0:
+        ```Dockerfile
+        --env DEVICE_ID=0
+        ```
+    - Change the model used, defaults to `TINY`:
+        ```Dockerfile
+        # >TINY             >TINY_EN
+        # >BASE             >BASE_EN
+        # >SMALL            >SMALL_EN
+        # >MEDIUM           >MEDIUM_EN
+        # >LARGE_V1         >LARGE_V2
+        # >LARGE_V3         >LARGE
+        --env MODEL_NAME=TINY
+        ```
 
-11. Now you can run the bot with your new image with:
+11. Now you can run the bot using the GPU with:
     ```bash
-    docker run -it --rm --runtime nvidia --gpus all --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_USER_ID -v "$(pwd)":/whisper2me -d whisper2me:latest bash -c "cd /whisper2me && python3 src/main.py"
+    docker run -it --rm --runtime nvidia --gpus all --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_USER_ID --env USE_CUDA=True -v "$(pwd)":/whisper2me -d whisper2me:latest bash -c "cd /whisper2me && python3 src/main.py"
     ```
-    replacing `YOUR_BOT_TOKEN` and `YOUR_USER_ID` with the appropriate values. 
+    If, for example, you want to use `GPU:3`, with the `large-v3` model in `fp16`:
+    ```bash
+    docker run -it --rm --runtime nvidia --gpus all --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_USER_ID --env MODEL_NAME=LARGE_V3 --env USE_CUDA=True --env DEVICE_ID=3 --env USE_FP16=True -v "$(pwd)":/whisper2me -d whisper2me:latest bash -c "cd /whisper2me && python3 src/main.py"
+    ```
 
 12. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The startup time, compared to CPU is significantly longer, on my tests the bot can take up to 1 minute before being ready.
 
@@ -238,4 +264,4 @@ The code can run on both ARM-64 and X64 architectures. It has been tested on:
 Task list
 =========
 - [x] `/purge` command not removing all users [Fixed 😁](https://github.com/Armaggheddon/whisper2me/commit/417a7942ef443fb804d8d13778d59616679cac2b)
-* [ ] Add model cache to avoid redownload of the model every time the container is ran.
+* [x] Add model cache to avoid redownload of the model every time the container is ran. [Fixed 😁](https://github.com/Armaggheddon/whisper2me/commit/4500298ba79377e9f156fccbd4e3f91de613b911)
