@@ -119,8 +119,8 @@ class _WhisperHelper():
 # Default whisper helper
 from storage import storage
 whisper_helper = _WhisperHelper(
-    model_name = storage.model_name,
-    device = Devices.CUDA if storage.use_cuda else Devices.CPU,
-    use_fp16=storage.use_fp16,
+    model_name=storage.model_name,
+    device=Devices.CUDA if storage.use_cuda else Devices.CPU,
+    use_fp16=ModelDtypes.FP16 if storage.use_fp16 else ModelDtypes.FP32,
     device_id=storage.device_id
 )
