@@ -10,7 +10,7 @@ class EnvKeys(Enum):
     ADMIN_USER_ID = "ADMIN_USER_ID"
     MODEL_NAME = "MODEL_NAME"
     USE_FP16 = "MODEL_DTYPE"
-    USE_CUDA = "CUDA"
+    USE_CUDA = "USE_CUDA"
     DEVICE_ID = "DEVICE_ID"
 
 
