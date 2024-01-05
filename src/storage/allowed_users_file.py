@@ -3,8 +3,8 @@ from utils.result import Result
 
 
 class StorageFileNames(Enum):
-    FILE_NAME =     "allowed_users.txt"
-    BAK_FILE_NAME = "allowed_users.bak"
+    FILE_NAME =     "persistent_data/allowed_users.txt"
+    BAK_FILE_NAME = "persistent_data/allowed_users.bak"
 
 class Messages(Enum):
     USER_ADD_ALREADY_IN =       "%(user_id)s is already allowed"

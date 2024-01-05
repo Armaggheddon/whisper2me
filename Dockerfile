@@ -8,6 +8,14 @@ ENV BOT_TOKEN=YOUR_BOT_TOKEN
 # The user id of the admin of the bot, yours
 ENV ADMIN_USER_ID=YOUR_ADMIN_ID
 
+# Available values are, defaults to TINY if mispelled:
+# >TINY             >TINY_EN
+# >BASE             >BASE_EN
+# >SMALL            >SMALL_EN
+# >MEDIUM           >MEDIUM_EN
+# >LARGE_V1         >LARGE_V2
+# >LARGE_V3         >LARGE
+ENV MODEL_NAME=TINY
 
 
 WORKDIR /whisper2me

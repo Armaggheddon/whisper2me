@@ -1,8 +1,8 @@
 from enum import Enum
 
 from utils.result import Result
-from storage.env_vars import env_vars
-from storage.allowed_users_file import allowed_users_file
+from .env_vars import env_vars
+from .allowed_users_file import allowed_users_file
 
 class StorageMessages(Enum):
     USER_ADD_IS_ADMIN = "%(user_id)s is ADMIN and cannot be added"
@@ -24,7 +24,10 @@ class _Storage():
 
         self.bot_token = env_vars.bot_token
         self.admin_id = env_vars.admin_id
-        # self.model_name = env_vars.model_name
+        self.model_name = env_vars.model_name
+        self.use_cuda = env_vars.use_cuda
+        self.use_fp16 = env_vars.use_fp16
+        self.device_id = env_vars.device_id
 
         self.allowed_users = allowed_users_file.allowed_users
     

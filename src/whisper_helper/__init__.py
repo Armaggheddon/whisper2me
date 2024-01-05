@@ -1,12 +1,13 @@
 import whisper
-from enum import Enum
 from .languages import Languages, LANGUAGE_KEY
 from .model_names import ModelNames, MODEL_NAME_KEY
 from .tasks import Tasks, TASK_KEY
 from .devices import Devices, DEVICE_KEY
 from .model_dtypes import ModelDtypes, DTYPE_KEY
 from utils.result_with_data import ResultWithData
+from storage import storage
 
+MODEL_CACHE_ROOT = "persistent_data/model_cache"
 
 class WhisperSettings():
     settings = {
@@ -44,6 +45,8 @@ class _WhisperHelper():
         WhisperSettings.settings[LANGUAGE_KEY] = language
         WhisperSettings.settings[TASK_KEY] = task
         WhisperSettings.settings[MODEL_NAME_KEY] = model_name
+        #TODO: check if model cache already exists, so that it can be used instead
+        # of having to redownload the model every time
             
         WhisperSettings.settings[DEVICE_KEY] = device
         if device == Devices.CPU.value:
@@ -54,7 +57,8 @@ class _WhisperHelper():
         WhisperSettings.settings["device_id"] = device_id
 
         self.model = whisper.load_model(
-            WhisperSettings.settings[MODEL_NAME_KEY].value
+            WhisperSettings.settings[MODEL_NAME_KEY].value,
+            download_root = "persistent_data/model_cache"
         )
         if WhisperSettings.settings[DEVICE_KEY] != Devices.CPU:
             self.model.to(
@@ -113,23 +117,10 @@ class _WhisperHelper():
     
 
 # Default whisper helper
+from storage import storage
 whisper_helper = _WhisperHelper(
-    model_name = ModelNames.TINY,
-    device = Devices.CPU,
-    use_fp16=ModelDtypes.FP32,
-    device_id=0
+    model_name = storage.model_name,
+    device = Devices.CUDA if storage.use_cuda else Devices.CPU,
+    use_fp16=storage.use_fp16,
+    device_id=storage.device_id
 )
-
-def change_backend_settings(
-    model_name : ModelNames = ModelNames.TINY,
-    use_fp16 : ModelDtypes = ModelDtypes.FP32, 
-    device : Devices = Devices.CPU,
-    device_id : int = 0,
-):
-    global whisper_helper
-    whisper_helper = _WhisperHelper(
-        model_name=model_name,
-        use_fp16=use_fp16,
-        device=device,
-        device_id=device_id
-    )

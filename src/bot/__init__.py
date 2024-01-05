@@ -1,8 +1,6 @@
 import telebot
 from telebot import TeleBot
 
-from storage import storage
-
 from filters.user_filter import UserFilter
 from filters.admin_filter import AdminFilter
 from handlers import (
@@ -19,6 +17,7 @@ from handlers import (
     help_admin,
 )
 
+from storage import storage
 
 
 def register_handlers(bot_handle : TeleBot):
