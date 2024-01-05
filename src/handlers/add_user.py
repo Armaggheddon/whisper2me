@@ -16,11 +16,11 @@ class Messages(Enum):
     ERROR =             "❌ User %(user_id)s is already allowed"
 
     def set_user(self, user_id):
-        '''Sets the user id in the message
+        """Sets the user id in the message
         
         Args:
         - user_id - the user id to set
-        '''
+        """
         return self.value % {"user_id" : str(user_id)}
 
 

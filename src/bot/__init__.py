@@ -21,8 +21,8 @@ from storage import storage
 
 
 def register_handlers(bot_handle : TeleBot):
-    '''Registers all the handlers for the bot
-    '''
+    """Registers all the handlers for the bot
+    """
     # Help command for users
     bot_handle.register_message_handler(
         help_user.handle_user_help_command,
@@ -138,7 +138,7 @@ def run(
     admin_id : int = storage.admin_id, 
     allowed_users = storage.allowed_users
 ):
-    '''Runs the bot with the given token and admin id
+    """Runs the bot with the given token and admin id
     
     Args:
     - bot_token : str - the token of the bot
@@ -146,7 +146,7 @@ def run(
     - allowed_users : list - the list of allowed users
 
     Arguments default to the values retrieved by storage
-    '''
+    """
     whisper_bot = TeleBot(bot_token)
     register_handlers(whisper_bot)
     whisper_bot.add_custom_filter(AdminFilter(admin_id))

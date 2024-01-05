@@ -1,3 +1,15 @@
+"""
+This module contains the WhisperHelper class, which is used to perform
+operations with the whisper model. It also contains the default whisper helper
+initialized with the values retrieved from storage. 
+
+Use whisper_helper to:
+- change the task performed by the whisper model
+- change the language used by the whisper model
+- transcribe/translate an audio message, using the current settings
+"""
+
+
 import whisper
 from .languages import Languages, LANGUAGE_KEY
 from .model_names import ModelNames, MODEL_NAME_KEY
@@ -20,8 +32,8 @@ class WhisperSettings():
     }
 
 class _WhisperHelper():
-    '''Helper class for whisper operations
-    '''
+    """Helper class for whisper operations
+    """
     
     def __init__(
             self,
@@ -32,7 +44,7 @@ class _WhisperHelper():
             device = Devices.CPU,
             device_id = 0
     ):
-        '''Initializes the whisper model
+        """Initializes the whisper model
         
         Args:
         - language : Languages - the language to use
@@ -41,12 +53,10 @@ class _WhisperHelper():
         - use_fp16 : ModelDtypes - whether to use fp16 or not, CPU supports only fp32
         - device : Devices - the device to use, supported devices are CPU and CUDA
         - device_id : int - the id of the device to use, ignored if device is CPU or if only one GPU is available
-        '''
+        """
         WhisperSettings.settings[LANGUAGE_KEY] = language
         WhisperSettings.settings[TASK_KEY] = task
         WhisperSettings.settings[MODEL_NAME_KEY] = model_name
-        #TODO: check if model cache already exists, so that it can be used instead
-        # of having to redownload the model every time
             
         WhisperSettings.settings[DEVICE_KEY] = device
         if device == Devices.CPU.value:
@@ -68,25 +78,25 @@ class _WhisperHelper():
             )
 
     def change_task(self, task):
-        '''Changes the task performed by the whisper model
+        """Changes the task performed by the whisper model
 
         Args:
         - task : Tasks - the task to perform
-        '''
+        """
         WhisperSettings.settings[TASK_KEY] = task
 
 
     def change_language(self, language):
-        '''Changes the language used by the whisper model
+        """Changes the language used by the whisper model
         
         Args:
         - language : Languages - the language to use
-        '''
+        """
         WhisperSettings.settings[LANGUAGE_KEY] = language
     
 
     def to_text(self, audio_path):
-        '''Transcribes/translates the audio message at the given path
+        """Transcribes/translates the audio message at the given path
         
         Args:
         - audio_path : str - the path to the audio message
@@ -94,7 +104,7 @@ class _WhisperHelper():
         Returns:
         - ResultWithData - the result of the operation, with 
         the transcribed/translated text if successful, or a message if not
-        '''
+        """
 
         model_result = self.model.transcribe(
             audio_path,

@@ -15,8 +15,8 @@ class EnvKeys(Enum):
 
 
 class _EnvVars():
-    '''Helper class to retrieve environment variables
-    '''
+    """Helper class to retrieve environment variables
+    """
 
 
     def __init__(
@@ -28,11 +28,11 @@ class _EnvVars():
             use_fp16_key : str = EnvKeys.USE_FP16.value,
             device_id_key : str = EnvKeys.DEVICE_ID.value,
     ):
-        '''
+        """
         Args:
         - bot_token_key : str - the key of the bot token environment variable
         - admin_userid_key : str - the key of the admin user id environment variable
-        '''
+        """
         self.bot_token = self.get_bot_token(bot_token_key)
         self.admin_id = self.get_admin_userid(admin_userid_key)
         self.model_name = self.get_model_name(model_name_key)
@@ -42,7 +42,16 @@ class _EnvVars():
     
 
     def get_bot_token(self, bot_token_key : str) -> str:
-        # TODO: Comment method REQUIRED VALUE!!, KeyError if not set
+        """Retrieves the bot token from the environment variables.
+        Since is a REQUIRED value, if not set, it will raise a KeyError if does not exist
+        or ValueError if the default value has not been changed.
+
+        Args:
+        - bot_token_key : str - the key of the bot token environment variable
+
+        Returns:
+        - str - the bot token
+        """
         try:
             bot_token = os.environ[bot_token_key]
             if bot_token == "YOUR_BOT_TOKEN": raise ValueError
@@ -57,7 +66,16 @@ class _EnvVars():
             raise KeyError
     
     def get_admin_userid(self, admin_userid_key):
-        # TODO: Comment method REQUIRED VALUE!!, KeyError if not set, ValueError if is not a number
+        """Retrieves the admin user id from the environment variables.
+        Since is a REQUIRED value it will raise a KeyError if does not exist and a 
+        ValueError if the value is not a number, i.e. is not changed from "YOUR_ADMIN_USER_ID"
+
+        Args:
+        - admin_userid_key : str - the key of the admin user id environment variable
+
+        Returns:
+        - int - the admin user id
+        """
         
         try:
             admin_user_id = os.environ[admin_userid_key]
