@@ -78,6 +78,7 @@ Setup
     ```
     >Refer to the OpenAI whisper's official paper for the performance evaluation between the different models, available [here](https://arxiv.org/abs/2212.04356)
 
+
 5. Build the docker image with:
     ```bash
     docker build -t whisper2me .
@@ -97,6 +98,9 @@ Setup
     ```
     > `-d` runs the container in detached mode. \
     > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/), replace `--rm` with `--restart <YOUR_POLICY>`, i.e. `--restart unless-stopped`
+
+> [!TIP]
+> It is possible to override the options in the Dockerfile when using the run command by providing the same environment variables with `--env` and using the same key-name combination, i.e., to use the medium model add `--env MODEL_NAME=MEDIUM`
 
 9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The model's weights are stored in `persistent_data/model_cache`.
 
@@ -162,13 +166,12 @@ If using on Jetson platform, `docker` is already installed in Jetpack, use [NVID
         ```
         replacing `YOUR_BOT_TOKEN` and `YOUR_ADMIN_ID` with yours
 
-    - To use CUDA use the following environment variable in the launch string:
+
+10. Optional arguments:
+    - To use CUDA, defaults to False if not used or if the GPU is not detected from torch:
         ```Dockerfile
         --env USE_CUDA=True
         ```
-        if CUDA is not detected, it will fall back to use the CPU.
-
-10. Optional arguments:
     - Use fp16 instead of fp32, will be used only if CUDA is True and is detected
         ```Dockerfile
         --env USE_FP16=True
