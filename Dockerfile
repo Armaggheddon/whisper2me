@@ -20,9 +20,6 @@ ENV MODEL_NAME=TINY
 
 WORKDIR /whisper2me
 
-RUN touch allowed_users.txt
-RUN touch allowed_users.bak
-
 RUN apt update && apt install ffmpeg -y
 RUN pip install --upgrade pip
 
