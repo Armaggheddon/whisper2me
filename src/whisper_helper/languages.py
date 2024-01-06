@@ -26,6 +26,16 @@ class LanguagesDescription(Enum):
         "flag_emoji" : "🇺🇸"
     }
 
+    FRENCH = {
+        "full_name" : "french",
+        "flag_emoji" : "🇫🇷"
+    }
+
+    GERMAN = {
+        "full_name" : "german",
+        "flag_emoji" : "🇩🇪"
+    }
+
     ITALIAN = {
         "full_name" : "italian",
         "flag_emoji" : "🇮🇹"
@@ -34,16 +44,6 @@ class LanguagesDescription(Enum):
     SPANISH = {
         "full_name" : "spanish",
         "flag_emoji" : "🇪🇸"
-    }
-
-    GERMAN = {
-        "full_name" : "german",
-        "flag_emoji" : "🇩🇪"
-    }
-
-    FRENCH = {
-        "full_name" : "french",
-        "flag_emoji" : "🇫🇷"
     }
 
     def __str__(self):
