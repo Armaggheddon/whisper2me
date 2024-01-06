@@ -5,7 +5,10 @@ LANGUAGE_KEY = "language"
 class Languages(Enum):
 
     ENGLISH = "en"
+    FRENCH = "fr"
+    GERMAN = "de"
     ITALIAN = "it"
+    SPANISH = "es"
 
     @classmethod
     def list_names(cls):
@@ -26,6 +29,21 @@ class LanguagesDescription(Enum):
     ITALIAN = {
         "full_name" : "italian",
         "flag_emoji" : "🇮🇹"
+    }
+
+    SPANISH = {
+        "full_name" : "spanish",
+        "flag_emoji" : "🇪🇸"
+    }
+
+    GERMAN = {
+        "full_name" : "german",
+        "flag_emoji" : "🇩🇪"
+    }
+
+    FRENCH = {
+        "full_name" : "french",
+        "flag_emoji" : "🇫🇷"
     }
 
     def __str__(self):
