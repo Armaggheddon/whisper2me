@@ -32,7 +32,10 @@ class Messages(Enum):
         if self != Messages.IS_CUDA_DTYPE:
             return self.value
         return self.value % {"model_dtype" : str(model_dtype), "GPU_ID" : f" on GPU:{gpu_id}"}
-    
+
+def model_dtype_to_string(model_dtype):
+    # model_dtype is a boolean, True for FP16, False for FP32
+    return f"{'FP16' if model_dtype else 'FP32'}"  
 
 def handle_info_command(message : Message, bot : TeleBot):
 
@@ -50,7 +53,7 @@ def handle_info_command(message : Message, bot : TeleBot):
         result += Messages.IS_CPU.value
     else:
         result += Messages.IS_CUDA_DTYPE.with_model_dtype(
-            WhisperSettings.settings[DTYPE_KEY].value, 
+            model_dtype_to_string(WhisperSettings.settings[DTYPE_KEY].value), 
             WhisperSettings.settings["device_id"]
         )
     
