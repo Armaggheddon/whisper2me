@@ -15,6 +15,7 @@ from handlers import (
     not_admin,
     help_user,
     help_admin,
+    info_command,
 )
 
 from storage import storage
@@ -54,6 +55,15 @@ def register_handlers(bot_handle : TeleBot):
         voice_message.handle_voice_message,
         content_types = voice_message.CONTENT_TYPES,
         user_filter = True,
+        pass_bot = True,
+    )
+
+    # Info command handler
+    bot_handle.register_message_handler(
+        info_command.handle_info_command,
+        commands=[info_command.CMD],
+        admin_filter=True,
+        user_filter=True,
         pass_bot = True,
     )
 
