@@ -229,6 +229,7 @@ The available list of commands depends on the case the user is an admin or not:
 
 - Commands available to all users:
     - `/start` begins the conversation with the bot
+    - `/info` shows the current bot settings
     - `/help` shows a list of available commands
 
 - Commands available only to the ADMIN:
