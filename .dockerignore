@@ -1,3 +1,4 @@
 .gitignore
+persistent_data/
 allowed_users.txt
 allowed_users.bak
