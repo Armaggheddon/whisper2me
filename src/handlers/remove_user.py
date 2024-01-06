@@ -13,7 +13,7 @@ REMOVE_USER_CB_CONDITION = "- "
 CB_LAMBDA = lambda call : call.data[:len(REMOVE_USER_CB_CONDITION)] == REMOVE_USER_CB_CONDITION
 DATA_FROM_CB = lambda call: call.data[len(REMOVE_USER_CB_CONDITION):] 
 
-class RemoveUserMessages(Enum):
+class Messages(Enum):
     COMMAND_HEAD =          "Select a user to remove.\nTo edit the admin user see the code documentation."
     BUTTON_CANCEL =         "❌ Cancel"
     BUTTON_CANCEL_CB_DATA = "CANCEL"
@@ -22,7 +22,7 @@ class RemoveUserMessages(Enum):
     ERROR =     "❌ Cannot remove user %(user_id)s"
 
     def set_user(self, user_id):
-        if self == RemoveUserMessages.SUCCESS or self == RemoveUserMessages.ERROR:
+        if self == Messages.SUCCESS or self == Messages.ERROR:
             return self.value % {"user_id" : str(user_id)}
         
 
@@ -45,8 +45,8 @@ def get_task_markup():
     
     markup.add(
         InlineKeyboardButton(
-            RemoveUserMessages.BUTTON_CANCEL.value,
-            callback_data=build_cb_data(RemoveUserMessages.BUTTON_CANCEL_CB_DATA.value)
+            Messages.BUTTON_CANCEL.value,
+            callback_data=build_cb_data(Messages.BUTTON_CANCEL_CB_DATA.value)
         )
     )
     
@@ -57,7 +57,7 @@ def handle_user_remove(message, bot):
 
     bot.send_message(
         message.chat.id,
-        RemoveUserMessages.COMMAND_HEAD.value,
+        Messages.COMMAND_HEAD.value,
         reply_markup = get_task_markup()
     )
 
@@ -66,23 +66,42 @@ def user_remove_selection_cb(call, bot):
 
     bot.answer_callback_query(call.id, "")
 
-    if DATA_FROM_CB(call) == RemoveUserMessages.BUTTON_CANCEL_CB_DATA.value:
-        bot.send_message(call.message.chat.id, "Cancelled")
+    data = DATA_FROM_CB(call)
+
+    if data == Messages.BUTTON_CANCEL_CB_DATA.value:
+        bot.send_message(
+            call.message.chat.id, 
+            Messages.BUTTON_CANCEL.value
+        )
         
     else:
-        user_to_remove = int(DATA_FROM_CB(call))
+        user_to_remove = int(data)
 
         result = storage.remove_user(user_to_remove)
 
         if result.is_success:
             bot.send_message(
                 call.message.chat.id,
-                RemoveUserMessages.SUCCESS.set_user(user_to_remove)
+                Messages.SUCCESS.set_user(user_to_remove)
             )
         else:
 
             bot.send_message(
                 call.message.chat.id,
-                RemoveUserMessages.ERROR.set_user(user_to_remove) + "\nReason: " + result.message
+                Messages.ERROR.set_user(user_to_remove) + "\nReason: " + result.message
             )
+    
+    # Remove markup for buttons and delete language selection message
+    # Remains only the response of the selection
+    bot.edit_message_reply_markup(
+        chat_id = call.message.chat.id,
+        message_id = call.message.id,
+        reply_markup=""
+    )
+    bot.delete_message(
+        chat_id = call.message.chat.id,
+        message_id = call.message.id
+    )
+
+    bot.answer_callback_query(call.id, "")
     
