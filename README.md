@@ -234,7 +234,10 @@ The available list of commands depends on the case the user is an admin or not:
 - Commands available only to the ADMIN:
     - `/language` change the model target language, currently are listed only:
         - 🇺🇸 English
+        - 🇫🇷 French
+        - 🇩🇪 German
         - 🇮🇹 Italian
+        - 🇪🇸 Spanish
     
     - `/task` change the model task to:
         - ✍ Transcribe, the input voice message is trasncribed using the automatically detected language
