@@ -9,6 +9,7 @@ class Messages(Enum):
     HELP = (
         "Available commands 📒: \n\n"
         "/start  starts the bot\n"
+        "/info  shows the current bot settings\n"
         "/help  shows this message\n\n"
         "To use the bot simply forward a voice message!"
     )

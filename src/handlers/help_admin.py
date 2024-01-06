@@ -9,6 +9,7 @@ class Messages(Enum):
     HELP = (
         "Available commands 📒: \n\n"
         "/start  starts the bot\n"
+        "/info  shows the current bot settings\n"
         "/language  change the target language for the transcription for all users\n"
         "/task  change the task to perform for all users\n"
         "/add_user  allow a new user to use the bot\n"
