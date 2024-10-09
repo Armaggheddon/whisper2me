@@ -3,7 +3,7 @@ from telebot import TeleBot
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
 from whisper_helper.languages import Languages, LanguagesDescription, LANGUAGE_KEY
-from whisper_helper import _WhisperHelper
+from whisper_helper import whisper_model
 
 
 CMD = "language"
@@ -70,7 +70,7 @@ def language_selection_cb(call, bot : TeleBot):
         )
     
     else:
-        _WhisperHelper().change_language(Languages[data])
+        whisper_model.change_language(Languages[data])
 
         bot.send_message(
             call.from_user.id, 

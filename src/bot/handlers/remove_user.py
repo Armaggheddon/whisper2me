@@ -14,12 +14,12 @@ CB_LAMBDA = lambda call : call.data[:len(REMOVE_USER_CB_CONDITION)] == REMOVE_US
 DATA_FROM_CB = lambda call: call.data[len(REMOVE_USER_CB_CONDITION):] 
 
 class Messages(Enum):
-    COMMAND_HEAD =          "Select a user to remove.\nTo edit the admin user see the code documentation."
-    BUTTON_CANCEL =         "❌ Cancel"
+    COMMAND_HEAD = "Select a user to remove.\nTo edit the admin user see the code documentation."
+    BUTTON_CANCEL = "❌ Cancel"
     BUTTON_CANCEL_CB_DATA = "CANCEL"
 
-    SUCCESS =   "✅ User %(user_id)s has been removed!"
-    ERROR =     "❌ Cannot remove user %(user_id)s"
+    SUCCESS = "✅ User %(user_id)s has been removed!"
+    ERROR = "❌ Cannot remove user %(user_id)s"
 
     def set_user(self, user_id):
         if self == Messages.SUCCESS or self == Messages.ERROR:

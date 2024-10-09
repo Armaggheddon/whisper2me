@@ -4,7 +4,7 @@ from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from whisper_helper.tasks import Tasks, TasksDescription, TASK_KEY
-from whisper_helper import _WhisperHelper
+from whisper_helper import whisper_model
 
 
 CMD = "task"
@@ -69,7 +69,7 @@ def task_selection_cb(call, bot):
             Messages.BUTTON_CANCEL.value
         )
     else:
-        _WhisperHelper().change_language(Tasks[data])
+        whisper_model.change_language(Tasks[data])
 
         bot.send_message(
             call.from_user.id, 

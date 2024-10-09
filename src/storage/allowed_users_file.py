@@ -7,8 +7,8 @@ class StorageFileNames(Enum):
     BAK_FILE_NAME = "persistent_data/allowed_users.bak"
 
 class Messages(Enum):
-    USER_ADD_ALREADY_IN =       "%(user_id)s is already allowed"
-    USER_REMOVE_ALREADY_IN =    "%(user_id)s is already not allowed"
+    USER_ADD_ALREADY_IN = "%(user_id)s is already allowed"
+    USER_REMOVE_ALREADY_IN = "%(user_id)s is already not allowed"
     USER_PURGE_LIST_ALREADY_EMPY = "The list is already empty"
 
     def set_user(self, user_id):

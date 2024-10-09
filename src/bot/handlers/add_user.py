@@ -7,13 +7,13 @@ from storage import storage
 CMD = "add_user"
 
 class Messages(Enum):
-    COMMAND_INFO =      "Send the user_id of the user you want to add.\nYou can also forward the user's message"
+    COMMAND_INFO = "Send the user_id of the user you want to add.\nYou can also forward the user's message"
     NOT_TEXT =  "❌ The user id MUST BE a text message!"
     USER_ID_TOO_SHORT = "❌ The user ID has at most 10 digits!"
     USER_ID_NOT_NUMBER = "❌ The user ID must be a number!"
 
-    SUCCESS =           "✅ User %(user_id)s has been added!"
-    ERROR =             "❌ User %(user_id)s is already allowed"
+    SUCCESS = "✅ User %(user_id)s has been added!"
+    ERROR = "❌ User %(user_id)s is already allowed"
 
     def set_user(self, user_id):
         """Sets the user id in the message
