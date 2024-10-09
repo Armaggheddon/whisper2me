@@ -1,5 +1,37 @@
-# whisper2me
+<div id="top"></div>
+<br/>
+<br/>
+
+<p align="center">
+  <img src="./doc/images/shushing_emojy.png" width="150" height="150">
+</p>
+
+<h1 align=center>
+    <a href="https://github.com/Armaggheddon/whisper2me">whisper2me</a>
+</h1>
+
+<p align="center">
+<a href="https://github.com/Armaggheddon/whisper2me/commits/main">
+<img src="https://img.shields.io/github/last-commit/Armaggheddon/whisper2me">
+</a>
+<a href="https://github.com/Armaggheddon/whisper2me">
+<img src="https://img.shields.io/badge/Maintained-yes-green.svg"/>
+</a>
+<a href="https://github.com/Armaggheddon/whisper2me/issues">
+<img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/Armaggheddon/whisper2me">
+</a>
+<a href="https://github.com/Armaggheddon/whisper2me/blob/main/LICENSE">
+<img alt="GitHub License" src="https://img.shields.io/github/license/Armaggheddon/whisper2me"/>
+</a>
+<!--<a href="https://github.com/Armaggheddon/whisper2me">
+<img src="https://img.shields.io/badge/Maintained%3F-no-red.svg">
+</a> -->
+</p>
+
+<p align="center">
 If you are annoyed by voice messages, **whisper2me** is the bot for you. Just start the bot on your machine and forward the messages you want to transcribe.
+</p>
+
 
 ## Table of Contents  
 * [Prerequisites](#preprequisites)
