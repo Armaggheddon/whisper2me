@@ -40,171 +40,85 @@ Setup
     ```bash
     cd whisper2me
     ```
-3. Inside the Dockerfile you have to edit the following lines:
-    ```Dockerfile
-    ENV BOT_TOKEN=YOUR_BOT_TOKEN
-    ENV ADMIN_USER_ID=YOUR_ADMIN_ID
-    ```
-    where `YOUR_BOT_TOKEN` and `ADMIN_USER_ID` are written as is, for example:
+3. Rename `bot_config.env.example` to `bot_config.env` and replace the fields with your own:
+    - Replace `YOUR_BOT_TOKEN` and `ADMIN_USER_ID`:
 
-    ```Dockerfile
-    ENV BOT_TOKEN=0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    ENV ADMIN_USER_ID=000000000
-    ```
-4. By default the bot will use the smallest model, i.e. `TINY`. However, if the device on which you are running the bot has more capabilities you may want to try bigger models. The available models are the ones provided by OpenAI and are (at the time of writing):
-    - TINY
-    - TINY_EN
-    - BASE
-    - BASE_EN
-    - SMALL
-    - SMALL_EN
-    - MEDIUM
-    - MEDIUM_EN
-    - LARGE_V1
-    - LARGE_V2
-    - LARGE_V3
-    - LARGE
+        ```dosini
+        BOT_TOKEN=0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        ADMIN_USER_ID=000000000
+        ```
+    - By default the bot will use the smallest model, i.e. `TINY`. However, if the device on which you are running the bot has more capabilities you may want to try bigger models. The available models are the ones provided by OpenAI and are (at the time of writing):
+        - TINY
+        - TINY_EN
+        - BASE
+        - BASE_EN
+        - SMALL
+        - SMALL_EN
+        - MEDIUM
+        - MEDIUM_EN
+        - LARGE_V1
+        - LARGE_V2
+        - LARGE_V3
+        - LARGE
+        - LARGE_V3_TURBO
+        - TURBO
     
-    To try different models, replace `TINY` with one of the above options in the Dockerfile:
-    ```Dockerfile
-    # Available values are, defaults to TINY if mispelled:
-    # >TINY             >TINY_EN
-    # >BASE             >BASE_EN
-    # >SMALL            >SMALL_EN
-    # >MEDIUM           >MEDIUM_EN
-    # >LARGE_V1         >LARGE_V2
-    # >LARGE_V3         >LARGE
-    ENV MODEL_NAME=TINY
-    ```
-    >Refer to the OpenAI whisper's official paper for the performance evaluation between the different models, available [here](https://arxiv.org/abs/2212.04356)
-
-
-5. Build the docker image with:
-    ```bash
-    docker build -t whisper2me .
-    ```
-
-6. After the image has been built you can see it with:
-    ```bash
-    docker images list
-    ```
-    And check for **whisper2me:latest**
-
-7. The bot allows the admin user to add and remove users without having to re-run the bot. To allow for this behaviour and have persistent data the bot uses 2 files, namely `allowed_users.txt` and `allowed_users.bak`. These are required to be mounted inside the container so that any modification is also available in the host.
-
-8. Run the container with:
-    ```bash
-    docker run -it --rm -v "$(pwd)"/persistent_data:/whisper2me/persistent_data -d whisper2me:latest
-    ```
-    > `-d` runs the container in detached mode.
-    >
-    > To start the container automatically see Docker's `--restart` policies [here](https://docs.docker.com/config/containers/start-containers-automatically/)  
-    > Replace `--rm` with `--restart <YOUR_POLICY>`, i.e. `--restart unless-stopped`
-
-> [!TIP]
-> It is possible to override the options in the Dockerfile when using the run command by providing the same environment variables with `--env` and using the same key-name combination:  
-> i.e., to use the medium model add `--env MODEL_NAME=MEDIUM`
-
-9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The model's weights are stored in `persistent_data/model_cache`.
-
-
-CUDA Setup
-==========
-
-If using on Jetson platform, `docker` is already installed in Jetpack, use [NVIDIA L4T PyTorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-pytorch/tags) image. If using on DGPU, `nvidia-docker` requires to be installed, you can follow the Nvidia's guide [here](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#installing-the-nvidia-container-toolkit) and use the [PyTorch](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) image.
-
-> [!NOTE]
-> The following steps have been tested on a Nvidia Orin AGX running Jetpack 5.1.2 with the NVIDIA L4T PyTorch r35.2.1-pth2.0-py3 image. If trying to use on a DGPU the steps might be different
-
-1. Follow steps `1` and `2` of [Setup](#setup)
-
-2. Run the container and mount the current directory with:
-    ```bash
-    docker run -it --rm --runtime nvidia --gpus all -v "$(pwd)":/whisper2me nvcr.io/nvidia/pytorch:xx.xx-py3
-    ```
-    replace `pythorch:xx.xx-py3` with the version you downloaded
-
-3. Once inside the container install ffmpeg with:
-    ```bash
-    apt update && apt install ffmpeg -y
-    ```
-
-4. Install the python requirements with:
-    ```bash
-    cd /whisper2me
-    pip install -r requirements_cuda.txt
-    ```
-    If you get an error stating
-    > ERROR: numba 0.58.1 has requirement numpy<1.27,>=1.22, but you'll have numpy 1.17.4 which is incompatible.
-    
-    run the following command:
-    ```bash
-    pip install -U numpy
-    ```
-    and then re-run the above command 
-
-5. When the installation has finished press `CTRL+P` + `CTRL+Q` to detach from the running container
-
-6. Get the container ID with:
-    ```bash
-    docker container list
-    ```
-    and copy the `CONTAINER ID` of the PyTorch container
-
-7. Commit the changes to the container and save it with a new name with:
-    ```bash
-    docker commit -p CONTAINER_ID whisper2me:latest
-    ```
-    The changes to the base image are stored in the new image that will be named `whisper2me:latest`
-
-    > `-p` option pauses the container while the commit is being executed.
-
-8. Check the new image with:
-    ```bash
-    docker image list
-    ```
-9. Required arguments:
-    - Set the `BOT_TOKEN` and `ADMIN_USER_ID` with:
-        ```Dockerfile
-        --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_ADMIN_ID
-        ```
-        replacing `YOUR_BOT_TOKEN` and `YOUR_ADMIN_ID` with yours
-
-
-10. Optional arguments:
-    - To use CUDA, defaults to False if not used or if the GPU is not detected from torch:
-        ```Dockerfile
-        --env USE_CUDA=True
-        ```
-    - Use fp16 instead of fp32, will be used only if CUDA is True and is detected
-        ```Dockerfile
-        --env USE_FP16=True
-        ```
-    - Select the GPU that will be used for the model inference, defaults to 0:
-        ```Dockerfile
-        --env DEVICE_ID=0
-        ```
-    - Change the model used, defaults to `TINY`:
-        ```Dockerfile
+        To try different models, replace `TINY` with one of the above options in the Dockerfile:
+        ```dosini
+        # Available values are, defaults to TINY if mispelled:
         # >TINY             >TINY_EN
         # >BASE             >BASE_EN
         # >SMALL            >SMALL_EN
         # >MEDIUM           >MEDIUM_EN
         # >LARGE_V1         >LARGE_V2
         # >LARGE_V3         >LARGE
-        --env MODEL_NAME=TINY
+        # >LARGE_V3_TURBO   >TURBO
+        MODEL_NAME=TINY
         ```
+> [!NOTE]
+> Refer to the OpenAI whisper's official paper for the performance evaluation between the different models, available [here](https://arxiv.org/abs/2212.04356)
 
-11. Now you can run the bot using the GPU with:
+
+5. Build the image:
     ```bash
-    docker run -it --rm --runtime nvidia --gpus all --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_USER_ID --env USE_CUDA=True -v "$(pwd)":/whisper2me -d whisper2me:latest bash -c "cd /whisper2me && python3 src/main.py"
+    docker compose build
     ```
-    If, for example, you want to use `GPU:3`, with the `large-v3` model in `fp16`:
+    The image created is named as `whisper2me_bot:latest`.
+
+
+7. The bot allows the admin user to add and remove users without having to re-run the bot. To allow for this behaviour and have persistent data the bot uses 2 files, namely `allowed_users.txt` and `allowed_users.bak`. These are required to be mounted inside the container so that any modification is also available in the host.
+
+8. Run the container with:
     ```bash
-    docker run -it --rm --runtime nvidia --gpus all --env BOT_TOKEN=YOUR_BOT_TOKEN --env ADMIN_USER_ID=YOUR_USER_ID --env MODEL_NAME=LARGE_V3 --env USE_CUDA=True --env DEVICE_ID=3 --env USE_FP16=True -v "$(pwd)":/whisper2me -d whisper2me:latest bash -c "cd /whisper2me && python3 src/main.py"
+    docker compose up -d
+    ```
+    `-d` runs the container in detached mode.
+    
+> [!INFO]
+> The container is, by default, set to automatically restart on failure and when the device restart. This can be changed in the `deploy.restart_policy.condition` setting in `docker-compose.yml` file.
+
+
+9. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The model's weights are stored in the host `persistent_data/model_cache` (which is mounted in the container).
+
+
+CUDA Setup
+==========
+
+The following steps illustrate how to run CUDA accelerated whisper2me bot. All of the steps for the non-CUDA use apply here, the only difference is for building and running the container following command have to be used:
+
+- Build the container with:
+    ```bash
+    docker compose -f cuda-docker-compose.yml build
     ```
 
-12. When the container starts the model is downloaded. Depending on your internet connection and the selected model, this might take a while. The startup time, compared to CPU is significantly longer, on my tests the bot can take up to 1 minute before being ready.
+- Run the container with:
+    ```bash
+    docker compose -f cuda-docker-compose up -d
+    ```
+
+> [!NOTE]
+> The following steps have been tested on a Nvidia Orin AGX running Jetpack 5.1.2 with the NVIDIA L4T PyTorch r35.2.1-pth2.0-py3 image and on an RTX 3070 Ti running in WSL. 
+
 
 
 Usage
@@ -269,7 +183,10 @@ How it works
 
 The code can run on both ARM-64 and X64 architectures. It has been tested on:
 - Raspberry Pi 3B with 1GB of RAM (using [Raspberry Pi OS(64-bit) Lite](https://www.raspberrypi.com/software/operating-systems/)), the only runnable model is the `TINY` one. Almost all available Pi's resources are used and runs approximately 6x slower than real-time.
+
 - Nvidia Orin AGX with 64GB of RAM (using [Jetpack 5.1.2](https://developer.nvidia.com/embedded/jetpack-sdk-512)), all models run without any issue. Using the `LARGE_V3` model requires around 25-30 GB of combined RAM (both CPU and GPU). Execution time is faster than real-time.
+
+- WSL on a desktop in both standard and CUDA version with an RTX 3070 Ti. Execution time is faster than real-time.
 
 
 Task list
