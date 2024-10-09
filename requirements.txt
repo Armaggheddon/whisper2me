@@ -4,3 +4,4 @@ torchaudio == 2.1.2
 
 pyTelegramBotAPI
 openai-whisper
+ffmpeg-python
