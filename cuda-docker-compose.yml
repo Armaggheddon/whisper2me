@@ -1,0 +1,22 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: cuda-Dockerfile
+    container_name: whisper2me_bot
+    volumes:
+      - ./persistent_data:/whisper2me/persistent_data
+    env_file:
+      - bot_config.env
+      - cuda_config.env
+    deploy:
+      restart_policy:
+        condition: any
+        window: 120s
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    

@@ -1,0 +1,15 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whisper2me_bot
+    volumes:
+      - ./persistent_data:/whisper2me/persistent_data
+    env_file:
+      - bot_config.env
+    deploy:
+      restart_policy:
+        condition: any
+        window: 120s
+    
