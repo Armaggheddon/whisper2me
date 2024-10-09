@@ -94,7 +94,7 @@ Setup
     ```
     `-d` runs the container in detached mode.
     
-> [!INFO]
+> [!TIP]
 > The container is, by default, set to automatically restart on failure and when the device restart. This can be changed in the `deploy.restart_policy.condition` setting in `docker-compose.yml` file.
 
 
