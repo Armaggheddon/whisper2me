@@ -7,3 +7,4 @@ src/handlers/__pycache__/
 src/storage/__pycache__/
 src/utils/__pycache__/
 src/whisper_helper/__pycache__/
+bot_config.env
