@@ -2,7 +2,7 @@ from enum import Enum
 from telebot import TeleBot
 from telebot.types import Message
 
-from storage import storage
+from storage import UsersStorage
 
 CMD = "purge"
 
@@ -24,7 +24,7 @@ def handle_purge_continuation(message, bot):
 
     if response == "YES":
         
-        result = storage.purge_users()
+        result = UsersStorage.get_instance().purge_users()
         
         if result.is_success:
             bot.send_message(

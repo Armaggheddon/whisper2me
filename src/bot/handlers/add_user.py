@@ -2,7 +2,7 @@ from enum import Enum
 from telebot import TeleBot
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-from storage import storage
+from storage import UsersStorage
 
 CMD = "add_user"
 
@@ -55,7 +55,7 @@ def handle_user_id(message, bot):
         if type(user_to_add) is not int:
             user_to_add = int(user_to_add)
 
-        result = storage.add_user(user_to_add)
+        result = UsersStorage.get_instance().add_user(user_to_add)
 
         if result.is_success:
             bot.send_message(

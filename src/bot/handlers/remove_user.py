@@ -3,7 +3,7 @@ from enum import Enum
 from telebot import TeleBot
 from telebot.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
-from storage import storage
+from storage import UsersStorage
 from utils.user_formats import UserFormats
 
 CMD = "remove_user"
@@ -34,7 +34,7 @@ def get_task_markup():
     markup = InlineKeyboardMarkup()
     markup.row_width = 2
 
-    for user in storage.allowed_users:
+    for user in UsersStorage.get_instance().list_users():
 
         markup.add(
             InlineKeyboardButton(
@@ -77,7 +77,7 @@ def user_remove_selection_cb(call, bot):
     else:
         user_to_remove = int(data)
 
-        result = storage.remove_user(user_to_remove)
+        result = UsersStorage.get_instance().remove_user(user_to_remove)
 
         if result.is_success:
             bot.send_message(
