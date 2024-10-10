@@ -8,10 +8,7 @@ Use whisper_helper to:
 - change the language used by the whisper model
 - transcribe/translate an audio message, using the current settings
 """
-
-
 import whisper
-import numpy as np
 
 from .languages import Languages, LANGUAGE_KEY
 from .model_names import ModelNames, MODEL_NAME_KEY
@@ -20,28 +17,27 @@ from .devices import Devices, DEVICE_KEY
 from .model_dtypes import ModelDtypes, DTYPE_KEY
 from .audio import load_audio_from_bytes
 from utils.result_with_data import ResultWithData
-from storage import storage
+from storage import env_vars, BotSettings, SettingKeys
 
-MODEL_CACHE_ROOT = "persistent_data/model_cache"
 
-class WhisperSettings():
-    settings = {
-        LANGUAGE_KEY :      Languages.ITALIAN,
-        TASK_KEY :          Tasks.TRANSCRIBE,
-        MODEL_NAME_KEY :    ModelNames.TINY,
-        DTYPE_KEY :         ModelDtypes.FP32,
-        DEVICE_KEY :        Devices.CPU,
-        "device_id" :       0
-    }
+_model_cache_root = "/whisper2me_bot_data/model_cache"
+  
 
 class _WhisperHelper():
     """Helper class for whisper operations
     """
     
+    _settings = {
+        LANGUAGE_KEY: Languages.ITALIAN,
+        TASK_KEY: Tasks.TRANSCRIBE,
+        MODEL_NAME_KEY: ModelNames.TINY,
+        DTYPE_KEY: ModelDtypes.FP32,
+        DEVICE_KEY: Devices.CPU,
+        "device_id": 0
+    }
+
     def __init__(
             self,
-            language = Languages.ITALIAN,
-            task = Tasks.TRANSCRIBE,
             model_name = ModelNames.TINY,
             use_fp16 = ModelDtypes.FP32,
             device = Devices.CPU,
@@ -57,28 +53,43 @@ class _WhisperHelper():
         - device : Devices - the device to use, supported devices are CPU and CUDA
         - device_id : int - the id of the device to use, ignored if device is CPU or if only one GPU is available
         """
-        WhisperSettings.settings[LANGUAGE_KEY] = language
-        WhisperSettings.settings[TASK_KEY] = task
-        WhisperSettings.settings[MODEL_NAME_KEY] = model_name
-            
-        WhisperSettings.settings[DEVICE_KEY] = device
-        if device == Devices.CPU.value:
-            WhisperSettings.settings[DTYPE_KEY] = ModelDtypes.FP32
-        else:
-            WhisperSettings.settings[DTYPE_KEY] = use_fp16
+
+        _WhisperHelper._settings[LANGUAGE_KEY] = Languages(
+            BotSettings.get_instance().get_setting(
+                SettingKeys.MODEL_LANGUAGE))
+
+        _WhisperHelper._settings[TASK_KEY] = Tasks(
+            BotSettings.get_instance().get_setting(
+                SettingKeys.MODEL_TASK))
         
-        WhisperSettings.settings["device_id"] = device_id
+        _WhisperHelper._settings[MODEL_NAME_KEY] = model_name
+            
+        _WhisperHelper._settings[DEVICE_KEY] = device
+        if device == Devices.CPU.value:
+            _WhisperHelper._settings[DTYPE_KEY] = ModelDtypes.FP32
+        else:
+            _WhisperHelper._settings[DTYPE_KEY] = use_fp16
+        
+        _WhisperHelper._settings["device_id"] = device_id
 
         self.model = whisper.load_model(
-            WhisperSettings.settings[MODEL_NAME_KEY].value,
-            download_root = "persistent_data/model_cache"
+            _WhisperHelper._settings[MODEL_NAME_KEY].value,
+            download_root = _model_cache_root
         )
-        if WhisperSettings.settings[DEVICE_KEY] != Devices.CPU:
+        if _WhisperHelper._settings[DEVICE_KEY] != Devices.CPU:
             self.model.to(
-                WhisperSettings.settings[DEVICE_KEY].with_id(
-                    WhisperSettings.settings["device_id"]
+                _WhisperHelper._settings[DEVICE_KEY].with_id(
+                    _WhisperHelper._settings["device_id"]
                 )
             )
+
+    def get_settings(self):
+        """Returns the current settings used by the whisper model
+        
+        Returns:
+        - dict - the current settings
+        """
+        return _WhisperHelper._settings
 
     def change_task(self, task):
         """Changes the task performed by the whisper model
@@ -86,7 +97,12 @@ class _WhisperHelper():
         Args:
         - task : Tasks - the task to perform
         """
-        WhisperSettings.settings[TASK_KEY] = task
+        _WhisperHelper._settings[TASK_KEY] = Tasks(
+            BotSettings.get_instance().set_setting(
+                SettingKeys.MODEL_TASK,
+                task.value
+            )
+        )
 
 
     def change_language(self, language):
@@ -95,8 +111,13 @@ class _WhisperHelper():
         Args:
         - language : Languages - the language to use
         """
-        WhisperSettings.settings[LANGUAGE_KEY] = language
-    
+        _WhisperHelper._settings[LANGUAGE_KEY] = Languages(
+            BotSettings.get_instance().set_setting(
+                SettingKeys.MODEL_LANGUAGE,
+                language.value
+            )
+        )
+
 
     def to_text(self, audio_byte_buffer):
         """Transcribes/translates the audio message at the given path
@@ -111,9 +132,9 @@ class _WhisperHelper():
 
         model_result = self.model.transcribe(
             load_audio_from_bytes(audio_byte_buffer),
-            language = WhisperSettings.settings[LANGUAGE_KEY].value,
-            task = WhisperSettings.settings[TASK_KEY].value,
-            fp16 = WhisperSettings.settings[DTYPE_KEY].value,
+            language = _WhisperHelper._settings[LANGUAGE_KEY].value,
+            task = _WhisperHelper._settings[TASK_KEY].value,
+            fp16 = _WhisperHelper._settings[DTYPE_KEY].value,
         )
 
         result = ResultWithData()
@@ -130,10 +151,9 @@ class _WhisperHelper():
     
 
 # Default whisper helper
-from storage import storage
 whisper_model = _WhisperHelper(
-    model_name=storage.model_name,
-    device=Devices.CUDA if storage.use_cuda else Devices.CPU,
-    use_fp16=ModelDtypes.FP16 if storage.use_fp16 else ModelDtypes.FP32,
-    device_id=storage.device_id
+    model_name=env_vars.get_model_name(),
+    device=Devices.CUDA if env_vars.get_use_cuda() else Devices.CPU,
+    use_fp16=ModelDtypes.FP16 if env_vars.get_use_fp16() else ModelDtypes.FP32,
+    device_id=env_vars.get_device_id()
 )
