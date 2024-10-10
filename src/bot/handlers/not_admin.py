@@ -1,7 +1,7 @@
 from telebot import TeleBot
 from telebot.types import Message
 
-from storage import storage
+from storage import env_vars
 
 def handle_non_admin_endpoint(message, bot):
 
@@ -11,6 +11,6 @@ def handle_non_admin_endpoint(message, bot):
     )
 
     bot.send_message(
-        storage.admin_id,
+        env_vars.get_admin_userid(),
         f"⚠️ {message.chat.id} tried an ADMIN command ⚠️\n\n{message.text}"
     )

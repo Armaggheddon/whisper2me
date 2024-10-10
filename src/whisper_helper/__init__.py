@@ -1,1 +1,1 @@
-from .whisper_helper import whisper_model, WhisperSettings
+from .whisper_helper import whisper_model
