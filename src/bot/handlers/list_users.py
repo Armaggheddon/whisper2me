@@ -2,7 +2,7 @@ from enum import Enum
 from telebot import TeleBot
 from telebot.types import Message
 
-from storage import storage
+from storage import UsersStorage, env_vars
 from utils.user_formats import UserFormats
 
 CMD = "users"
@@ -16,9 +16,9 @@ def get_users_printable():
 
     users_str = ""
 
-    users_str += UserFormats.USER_ADMIN.set_user(storage.admin_id) + "\n"
+    users_str += UserFormats.USER_ADMIN.set_user(env_vars.get_admin_userid()) + "\n"
 
-    for user in storage.allowed_users:
+    for user in UsersStorage.get_instance().list_users():
         users_str += "\n"
         users_str += UserFormats.USER_NORMAL.set_user(user)
     

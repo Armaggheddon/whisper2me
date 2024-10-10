@@ -17,7 +17,7 @@ from .handlers import (
     info_command,
 )
 
-from storage import storage
+from storage import env_vars, UsersStorage
 
 
 def register_handlers(bot_handle : TeleBot):
@@ -143,9 +143,9 @@ def register_handlers(bot_handle : TeleBot):
 
 
 def run(
-    bot_token : str = storage.bot_token, 
-    admin_id : int = storage.admin_id, 
-    allowed_users = storage.allowed_users
+    bot_token : str = env_vars.get_bot_token(), 
+    admin_id : int = env_vars.get_admin_userid(), 
+    allowed_users = UsersStorage.get_instance().list_users()
 ):
     """Runs the bot with the given token and admin id
     
