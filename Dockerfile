@@ -1,4 +1,5 @@
-FROM nvcr.io/nvidia/pytorch:24.09-py3
+FROM python:3.10
+
 
 WORKDIR /whisper2me
 
