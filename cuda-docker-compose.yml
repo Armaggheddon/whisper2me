@@ -5,7 +5,7 @@ services:
       dockerfile: cuda-Dockerfile
     container_name: whisper2me_bot
     volumes:
-      - ./persistent_data:/whisper2me/persistent_data
+      - whisper2me_bot_data:/whisper2me_bot_data
     env_file:
       - bot_config.env
       - cuda_config.env
@@ -19,4 +19,7 @@ services:
             - driver: nvidia
               count: 1
               capabilities: [gpu]
+
+volumes:
+  whisper2me_bot_data:
     

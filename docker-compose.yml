@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: whisper2me_bot
     volumes:
-      - ./persistent_data:/whisper2me/persistent_data
+      - whisper2me_bot_data:/whisper2me_bot_data
     env_file:
       - bot_config.env
     deploy:
@@ -13,3 +13,5 @@ services:
         condition: any
         window: 120s
     
+volumes:
+  whisper2me_bot_data:
