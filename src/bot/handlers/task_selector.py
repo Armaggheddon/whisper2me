@@ -69,7 +69,7 @@ def task_selection_cb(call, bot):
             Messages.BUTTON_CANCEL.value
         )
     else:
-        whisper_model.change_language(Tasks[data])
+        whisper_model.change_task(Tasks[data])
 
         bot.send_message(
             call.from_user.id, 
